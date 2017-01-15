@@ -1,0 +1,80 @@
+What is TIRCIS
+--------------
+
+TIRCIS is a project at the Hawai`i Institute of Geophysics and Planetology
+(UHM), which has developed a prototype of a hyperspectral thermal infrared
+imager for Earth surface, to be used in small satellites.  (Picture of the
+prototype: http://www.higp.hawaii.edu/~wright/tircis.jpg) It allows the
+quantifying of the chemical composition of targets (e.g., volcano plumes).
+
+Here is a 20014 abstract: https://esto.nasa.gov/forum/estf2014/presentations/B4P6_Wright.pdf
+
+The code in this directory is used to processes the hyperspectral data obtained from from TIRCIS.
+
+How to build it 
+-----------------
+
+Install some packages:
+
+% sudo apt-get install make g++
+% sudo apt-get install fftw3-dev
+% sudo apt-get install libopencv-dev
+
+Compile it:
+
+% make clean; make
+
+The Makefile in this directory calls make in ./tircis_process_cmd_v0/ and
+./testdata/.  The Makefile  in ./tircis_process_cmd_v0/ is pretty simple and
+produces an executable that is then copied into the ./testdata/ directory.
+The Makefile in ./testadata/ does some string-replacing in the newproc.txt
+configuration file which, for some reason, wants absolute paths (check it
+out if you want to see some command-line fun). It also compiles a small
+program that I wrote and that will come in handy.
+
+
+How to run it
+-------------
+
+% cd testdata; ./tircis_process_cmd ./newproc.txt
+
+
+How to check the output
+-----------------------
+
+When optimizing a piece of software, often one breaks it (i.e., it no
+longer produces the desirable output). Sometimes, however, small variations
+in output are unavoidable and tolerable (e.g., due to different round-off
+errors after switching arithmetic operations around).  
+
+For instance, compile the following C code and (likely) be amazed:
+
+	int main() {
+        	double x=0.1+(0.2+0.3);
+        	double y=(0.1+0.2)+0.3;
+        	if (x == y) {
+                	printf("EQUAL\n");
+        	} else {
+                	printf("NOT EQUAL: %.20lf %.20lf\n",x,y);
+        	}
+	}
+
+
+At any rate, you need a way to check that the output you produce in your
+optimized version of tircis is still correct/acceptable.
+
+To check the output your code produces in ./testdata/processed, simply do:
+
+% cd ./testdata; make check
+
+The Makefile in ./testdata/ calls a bash script (which in turns calls a C
+program) to compare our output files byte-per-byte to the reference output
+files in ./valid_output. If no differences are found, then nothing will be
+printed out.
+
+Also, you can visually inspect the output picture
+./testdata/processed/phot_15_qtz_midband.png and compare to that in
+./valid_output/phot_15_qtz_midband.png
+
+
+
