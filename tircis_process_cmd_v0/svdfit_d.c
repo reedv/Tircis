@@ -9,8 +9,7 @@ void svdfit_d(double x[], double y[], double sig[], int ndata, double a[], int m
 	double **u, double **v, double w[], double *chisq,
 	void (*funcs)(double, double [], int))
 {
-	void svbksb_d(double **u, double w[], double **v, int m, int n, double b[],
-		double x[]);
+	void svbksb_d(double **u, double w[], double **v, int m, int n, double b[], double x[]);
 	void svdcmp_d(double **a, int m, int n, double w[], double **v);
 	int j,i;
 	double wmax,tmp,thresh,sum,*b,*afunc;
