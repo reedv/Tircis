@@ -1,0 +1,2 @@
+
+1. changed array accesses in max-finding and thresholding for-loops in svdfit_d.c into pointer accesses

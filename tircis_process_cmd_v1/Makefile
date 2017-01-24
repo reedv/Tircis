@@ -6,7 +6,7 @@ cc = gcc
 LD = ld
 
 # Set to compiler flags
-FLAGS = -O0 -pg
+FLAGS = -O3 -pg
 CFLAGS = ${FLAGS}
 CCFLAGS = ${FLAGS}  -std=c++11
 

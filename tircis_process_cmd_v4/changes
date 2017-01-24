@@ -1,0 +1,2 @@
+	* svdfit_d.c: added OpenMP parallel for directives to the two loops bounded by variable 'ndata' (reduced percent-time spent in this file from 6.07% to 0.00% accoring to gprof).
+	* GeneProcess::geneFrame: added OpenMP parallel for directive to outermost loop (reduced percent-time spent in this file from 3.53% to 0.00%).
