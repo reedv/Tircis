@@ -3,12 +3,14 @@
 #include "nrutil.h"
 
 static double at,bt,ct;
-#define PYTHAG(a,b) ((at=fabs(a)) > (bt=fabs(b)) ? \
-(ct=bt/at,at*sqrt(1.0+ct*ct)) : (bt ? (ct=at/bt,bt*sqrt(1.0+ct*ct)): 0.0))
+#define PYTHAG(a,b) ((at=fabs(a)) > (bt=fabs(b)) \
+	? (ct=bt/at,at*sqrt(1.0+ct*ct)) \
+	: (bt ? (ct=at/bt,bt*sqrt(1.0+ct*ct)): 0.0))
 
 static double maxarg1d,maxarg2d;
-#define MAXD(a,b) (maxarg1d=(a),maxarg2d=(b),(maxarg1d) > (maxarg2d) ?\
-	(maxarg1d) : (maxarg2d))
+#define MAXD(a,b) (maxarg1d=(a),maxarg2d=(b),(maxarg1d) > (maxarg2d) \
+	? (maxarg1d) \
+	: (maxarg2d))
 #define SIGN(a,b) ((b) >= 0.0 ? fabs(a) : -fabs(a))
 
 void svdcmp_d(double **a,int m,int n, double *w, double **v)
