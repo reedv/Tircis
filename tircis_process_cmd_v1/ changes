@@ -1,3 +1,4 @@
+	
 	* Changed gcc compiler optimization level from 0 to 3. Reduced execution latency by 60.5476%.
 	
 	* According to gprof profiler, the program spends about 5.5% of time in a function svdfit_d. Going the source file, I found that there are section of loops (some bounded by a variable 'ndata' and others by variable 'ma'). I found that variable 'ma' seems to always be set to the value 4, however I am hesitant to unroll these loops because I am not sure that the program will always have ma=4 in all expected cases. However, each loop makes array accesses, so I converted these accesses to dereferenced-pointer accesses (including the flattening of 2D array accesses).
@@ -7,3 +8,14 @@
 	
 	* The svdfit_d.c file uses calls a function svbksb_d, in which to total program spends 1.96% of its time.Looking at this small function, it appeared to have two local variables used to make the same kinds of accesses in different loops. Since the source file only used 5 variables total, my logic was that removing one of the redundant ones would reduces the variables needing to be popped on and off the stack by 22.22%. This change seemed particularly useul since svdfit_d is the majority caller of this function.
 		- This change produced no apparent reduction in execution time nor percent-time spent in either this function or its callers. This change was rolled back.
+
+	* In the function svdfit_d, moved initial value assignment of variable 'wmax', used to track a max value, up to its declaration. This allows the variable to use only the constructor, rather then using the constructor at delaration in addition to an assignment operation later down in the code.
+		- This change did not make much of a difference in terms of execution latency and it is likely that the high optimization level of the compiler had been doing something like this automatically. In any case, I kept this small change.
+
+
+
+
+
+
+
+

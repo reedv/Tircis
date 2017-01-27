@@ -14,7 +14,7 @@ void svdfit_d(double x[], double y[], double sig[], int ndata, double a[], int m
 	void svdcmp_d(double **a, int m, int n, double w[], double **v);
 
 	int j,i;
-	double wmax,tmp,thresh,sum,*b,*afunc;
+	double wmax=0.0,tmp,thresh,sum,*b,*afunc;
 
 	b=dvector(1,ndata);
 	afunc=dvector(1,ma);
@@ -26,7 +26,6 @@ void svdfit_d(double x[], double y[], double sig[], int ndata, double a[], int m
 
 	svdcmp_d(u,ndata,ma,w,v);
 
-	wmax=0.0;
 	for (j=1;j<=ma;j++)
 		if (w[j] > wmax) wmax=w[j];
 
