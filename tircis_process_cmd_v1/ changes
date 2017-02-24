@@ -11,6 +11,9 @@
 
 	* In the function svdfit_d, moved initial value assignment of variable 'wmax', used to track a max value, up to its declaration. This allows the variable to use only the constructor, rather then using the constructor at delaration in addition to an assignment operation later down in the code.
 		- This change did not make much of a difference in terms of execution latency and it is likely that the high optimization level of the compiler had been doing something like this automatically. In any case, I kept this small change.
+	
+	* The function svbksb_d was reported by gprof account for 2.06% of the total execution time. This function contains two singley-nested for loops. Each inner loop of these seperate for-loops uses a different iteration-counting variable, one of these variables was redundant (ie. could be used in both of the nested loops). I removed one of these variables and replaced it with the other. This has the benefit of reducing the number of variables that need to be popped on/off the stack during every call to this function as well as potentially allowing these local varialbes to be stored in registes if there are a small enough amount of them.
+		- This change did not make much of a difference in terms of execution latency and it is likely that the high optimization level of the compiler had been doing something like this automatically. In any case, I kept this small change.  
 
 
 
