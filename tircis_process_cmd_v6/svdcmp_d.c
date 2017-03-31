@@ -39,12 +39,7 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
     double anorm = 0.0, g = 0.0, scale = 0.0;
     double *rv1;
   
-    if (m < n) 
-    {
-        fprintf(stderr, "#rows must be > #cols \n");
-        nrerror("SVDCMP: You must augment A with extra zero rows");
-        return(0);
-    }
+    if (m < n) nrerror("SVDCMP: You must augment A with extra zero rows");
   
     //rv1 = (double *)malloc((unsigned int) n*sizeof(double));
     rv1 = dvector(1,n);
@@ -59,69 +54,69 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
         if (i < m) 
         {
             for (k = i; k < m; k++) 
-                scale += fabs((double)a[k][i]);
+                scale += fabs(a[k][i]);
             if (scale) 
             {
                 for (k = i; k < m; k++) 
                 {
-                    a[k][i] = (double)((double)a[k][i]/scale);
-                    s += ((double)a[k][i] * (double)a[k][i]);
+                    a[k][i] = a[k][i]/scale;
+                    s += (a[k][i] * a[k][i]);
                 }
-                f = (double)a[i][i];
+                f = a[i][i];
                 g = -SIGN(sqrt(s), f);
                 h = f * g - s;
-                a[i][i] = (double)(f - g);
+                a[i][i] = (f - g);
                 if (i != n - 1) 
                 {
                     for (j = l; j < n; j++) 
                     {
                         for (s = 0.0, k = i; k < m; k++) 
-                            s += ((double)a[k][i] * (double)a[k][j]);
+                            s += (a[k][i] * a[k][j]);
                         f = s / h;
                         for (k = i; k < m; k++) 
-                            a[k][j] += (double)(f * (double)a[k][i]);
+                            a[k][j] += (f * a[k][i]);
                     }
                 }
                 for (k = i; k < m; k++) 
-                    a[k][i] = (double)((double)a[k][i]*scale);
+                    a[k][i] = (a[k][i]*scale);
             }
         }
-        w[i] = (double)(scale * g);
+        w[i] = (scale * g);
     
         /* right-hand reduction */
         g = s = scale = 0.0;
         if (i < m && i != n - 1) 
         {
             for (k = l; k < n; k++) 
-                scale += fabs((double)a[i][k]);
+                scale += fabs(a[i][k]);
             if (scale) 
             {
                 for (k = l; k < n; k++) 
                 {
-                    a[i][k] = (double)((double)a[i][k]/scale);
-                    s += ((double)a[i][k] * (double)a[i][k]);
+                    a[i][k] = (a[i][k]/scale);
+                    s += (a[i][k] * a[i][k]);
                 }
-                f = (double)a[i][l];
+                f = a[i][l];
                 g = -SIGN(sqrt(s), f);
                 h = f * g - s;
-                a[i][l] = (double)(f - g);
+                a[i][l] = (f - g);
                 for (k = l; k < n; k++) 
-                    rv1[k] = (double)a[i][k] / h;
+                    rv1[k] = a[i][k] / h;
                 if (i != m - 1) 
                 {
                     for (j = l; j < m; j++) 
                     {
                         for (s = 0.0, k = l; k < n; k++) 
-                            s += ((double)a[j][k] * (double)a[i][k]);
+                            s += (a[j][k] * a[i][k]);
                         for (k = l; k < n; k++) 
-                            a[j][k] += (double)(s * rv1[k]);
+                            a[j][k] += (s * rv1[k]);
                     }
                 }
                 for (k = l; k < n; k++) 
-                    a[i][k] = (double)((double)a[i][k]*scale);
+                    a[i][k] = (a[i][k]*scale);
             }
         }
-        anorm = MAX(anorm, (fabs((double)w[i]) + fabs(rv1[i])));
+        anorm = MAX(anorm, (fabs(w[i]) + fabs(rv1[i])));
     }
   
     /* accumulate the right-hand transformation */
@@ -132,14 +127,14 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
             if (g) 
             {
                 for (j = l; j < n; j++)
-                    v[j][i] = (double)(((double)a[i][j] / (double)a[i][l]) / g);
+                    v[j][i] = ((a[i][j] / a[i][l]) / g);
                     /* double division to avoid underflow */
                 for (j = l; j < n; j++) 
                 {
                     for (s = 0.0, k = l; k < n; k++) 
-                        s += ((double)a[i][k] * (double)v[k][j]);
+                        s += (a[i][k] * v[k][j]);
                     for (k = l; k < n; k++) 
-                        v[k][j] += (double)(s * (double)v[k][i]);
+                        v[k][j] += (s * v[k][i]);
                 }
             }
             for (j = l; j < n; j++) 
@@ -154,7 +149,7 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
     for (i = n - 1; i >= 0; i--) 
     {
         l = i + 1;
-        g = (double)w[i];
+        g = w[i];
         if (i < n - 1) 
             for (j = l; j < n; j++) 
                 a[i][j] = 0.0;
@@ -166,14 +161,14 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
                 for (j = l; j < n; j++) 
                 {
                     for (s = 0.0, k = l; k < m; k++) 
-                        s += ((double)a[k][i] * (double)a[k][j]);
-                    f = (s / (double)a[i][i]) * g;
+                        s += (a[k][i] * a[k][j]);
+                    f = (s / a[i][i]) * g;
                     for (k = i; k < m; k++) 
-                        a[k][j] += (double)(f * (double)a[k][i]);
+                        a[k][j] += (f * a[k][i]);
                 }
             }
             for (j = i; j < m; j++) 
-                a[j][i] = (double)((double)a[j][i]*g);
+                a[j][i] = (a[j][i]*g);
         }
         else 
         {
@@ -197,7 +192,7 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
                     flag = 0;
                     break;
                 }
-                if (fabs((double)w[nm]) + anorm == anorm) 
+                if (fabs(w[nm]) + anorm == anorm) 
                     break;
             }
             if (flag) 
@@ -209,28 +204,28 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
                     f = s * rv1[i];
                     if (fabs(f) + anorm != anorm) 
                     {
-                        g = (double)w[i];
+                        g = w[i];
                         h = PYTHAG(f, g);
-                        w[i] = (double)h; 
+                        w[i] = h; 
                         h = 1.0 / h;
                         c = g * h;
                         s = (- f * h);
                         for (j = 0; j < m; j++) 
                         {
-                            y = (double)a[j][nm];
-                            z = (double)a[j][i];
-                            a[j][nm] = (double)(y * c + z * s);
-                            a[j][i] = (double)(z * c - y * s);
+                            y = a[j][nm];
+                            z = a[j][i];
+                            a[j][nm] = (y * c + z * s);
+                            a[j][i] = (z * c - y * s);
                         }
                     }
                 }
             }
-            z = (double)w[k];
+            z = w[k];
             if (l == k) 
             {                  /* convergence */
                 if (z < 0.0) 
                 {              /* make singular value nonnegative */
-                    w[k] = (double)(-z);
+                    w[k] = (-z);
                     for (j = 0; j < n; j++) 
                         v[j][k] = (-v[j][k]);
                 }
@@ -243,9 +238,9 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
             }
     
             /* shift from bottom 2 x 2 minor */
-            x = (double)w[l];
+            x = w[l];
             nm = k - 1;
-            y = (double)w[nm];
+            y = w[nm];
             g = rv1[nm];
             h = rv1[k];
             f = ((y - z) * (y + z) + (g - h) * (g + h)) / (2.0 * h * y);
@@ -258,7 +253,7 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
             {
                 i = j + 1;
                 g = rv1[i];
-                y = (double)w[i];
+                y = w[i];
                 h = s * g;
                 g = c * g;
                 z = PYTHAG(f, h);
@@ -271,13 +266,13 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
                 y = y * c;
                 for (jj = 0; jj < n; jj++) 
                 {
-                    x = (double)v[jj][j];
-                    z = (double)v[jj][i];
-                    v[jj][j] = (double)(x * c + z * s);
-                    v[jj][i] = (double)(z * c - x * s);
+                    x = v[jj][j];
+                    z = v[jj][i];
+                    v[jj][j] = (x * c + z * s);
+                    v[jj][i] = (z * c - x * s);
                 }
                 z = PYTHAG(f, h);
-                w[j] = (double)z;
+                w[j] = z;
                 if (z) 
                 {
                     z = 1.0 / z;
@@ -288,15 +283,15 @@ int svdcmp_d(double **a, int m, int n, double *w, double **v)
                 x = (c * y) - (s * g);
                 for (jj = 0; jj < m; jj++) 
                 {
-                    y = (double)a[jj][j];
-                    z = (double)a[jj][i];
-                    a[jj][j] = (double)(y * c + z * s);
-                    a[jj][i] = (double)(z * c - y * s);
+                    y = a[jj][j];
+                    z = a[jj][i];
+                    a[jj][j] = (y * c + z * s);
+                    a[jj][i] = (z * c - y * s);
                 }
             }
             rv1[l] = 0.0;
             rv1[k] = f;
-            w[k] = (double)x;
+            w[k] = x;
         }
     }
     //free((void*) rv1);
