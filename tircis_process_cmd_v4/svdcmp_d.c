@@ -20,11 +20,14 @@ void svdcmp_d(double **a,int m,int n, double *w, double **v)
 
 	if (m < n) nrerror("SVDCMP: You must augment A with extra zero rows");
 	rv1=dvector(1,n);
+
+	#pragma omp parallel for if(n > 100)
 	for (i=1;i<=n;i++) {
 		l=i+1;
 		rv1[i]=scale*g;
 		g=s=scale=0.0;
 		if (i <= m) {
+			#pragma omp parallel for if(m > 100)
 			for (k=i;k<=m;k++) scale += fabs(a[k][i]);
 			if (scale) {
 				for (k=i;k<=m;k++) {
