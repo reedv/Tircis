@@ -11,8 +11,17 @@ static double maxarg1d,maxarg2d;
 	(maxarg1d) : (maxarg2d))
 #define SIGN(a,b) ((b) >= 0.0 ? fabs(a) : -fabs(a))
 
-void svdcmp_d(double **a,int m,int n, double *w, double **v)
+extern "C" void svdcmp_d(double **a, int m, int n, double *w, double **v)
 {
+	/*
+	TODO: replace all code below with Eigen implementation
+	*/
+	// check 'numerical recipies' to see what the current args are for
+	
+	// convert args to a matrix that Eigen can BDCSVD() on
+	// return the result
+
+
 	int flag,i,its,j,jj,k,l,nm;
 	double c,f,h,s,x,y,z;
 	double anorm=0.0,g=0.0,scale=0.0;
