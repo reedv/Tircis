@@ -6,9 +6,9 @@ cc = gcc
 LD = ld
 
 # Set to compiler flags
-FLAGS = -O3 -pg -pthread -fopenmp -I ./Eigen
+FLAGS = -O3 -pg -pthread -fopenmp
 CFLAGS = ${FLAGS}
-CCFLAGS = ${FLAGS}  -std=c++11
+CCFLAGS = ${FLAGS}  -std=c++11 -I./Eigen --verbose
 
 
 # List of object files to generate
