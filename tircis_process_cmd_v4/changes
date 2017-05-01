@@ -2,7 +2,9 @@ Reed Villanueva
 ICS432
 Code optimization, phase 2
 
-Changes kept:	
+Changes kept:
+	Note that for all changes involving OMP threading, the overall execution time is increased from the original sequential code becuase I am testing on a vitual environment that only supports using a single core in the virtual environment. Thus, using more threads results in more overhead of creating the threads without having the benefit of actually using multiple threads. However, it is assumed that is most cases, the program will be run on a system with multiple cores available.
+ 	
 	* svdfit_d.c: added OpenMP 'parallel for' directives to the two loops bounded by variable 'ndata' (reduced percent-time spent in this file from 6.07% to 0.00% accoring to gprof).
 	* GeneProcess::geneFrame: added OpenMP 'parallel for' directive to outermost loop (reduced percent-time spent in this file from 3.53% to 0.00%).
 	* svdcmp_d.c: added OpenMP 'parallel for' directives to the original svd implementation. After this change, gprof profiler data shows a reduction in percent-time of the program spend in svdcmp_d from and average of 54.88% to 26.18%. My concern for this change is that while this implementation passes the testdata without error, the current OMP directive leaves all variables as shared ad I do not know enough about svd implementations to know if this is safe.

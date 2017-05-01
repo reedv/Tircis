@@ -65,7 +65,7 @@ void svdfit_d(double x[], double y[], double sig[], int ndata, double a[], int m
 	afunc=dvector(1,ma);
 	
 	// WARNGIN: Don't know what afunc is, but needs to be shared().
-	#pragma omp parallel for if(ndata > 100)\
+	#pragma omp parallel for num_threads(NUM_THREADS) if(ndata > 100)\
 		shared(funcs, x, afunc, ma, u, sig, b, y) \
 		private(i, j)
 	for (i=1;i<=ndata;i++) {	
@@ -90,7 +90,7 @@ void svdfit_d(double x[], double y[], double sig[], int ndata, double a[], int m
 	svbksb_d(u,w,v,ndata,ma,b,a);
 
 	*chisq=0.0;
-	#pragma omp parallel for if(ndata > 100)\
+	#pragma omp parallel for num_threads(NUM_THREADS) if(ndata > 100)\
 		shared(funcs, x, afunc, ma, a, chisq, y, sig) \
 		private(i, j, sum, tmp)
 	for (i=1; i<=ndata; i++) {

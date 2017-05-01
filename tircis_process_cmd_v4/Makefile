@@ -1,12 +1,13 @@
 #CC = /usr/bin/arm-linux-gnueabihf-g++ -g  --static
 #cc = /usr/bin/arm-linux-gnueabihf-gcc -g --static  
 #LD = /usr/bin/arm-linux-gnueabihf-ld
+NUM_THREADS = 1
 CC = g++  
 cc = gcc  
 LD = ld
 
 # Set to compiler flags
-FLAGS = -O3 -pg -pthread -fopenmp
+FLAGS = -O3 -pg -pthread -fopenmp -DNUM_THREADS=$(NUM_THREADS)
 CFLAGS = ${FLAGS}
 CCFLAGS = ${FLAGS}  -std=c++11
 
