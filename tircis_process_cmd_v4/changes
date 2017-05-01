@@ -1,2 +1,28 @@
-	* svdfit_d.c: added OpenMP parallel for directives to the two loops bounded by variable 'ndata' (reduced percent-time spent in this file from 6.07% to 0.00% accoring to gprof).
-	* GeneProcess::geneFrame: added OpenMP parallel for directive to outermost loop (reduced percent-time spent in this file from 3.53% to 0.00%).
+Reed Villanueva
+ICS432
+Code optimization, phase 2
+
+Changes kept:	
+	* svdfit_d.c: added OpenMP 'parallel for' directives to the two loops bounded by variable 'ndata' (reduced percent-time spent in this file from 6.07% to 0.00% accoring to gprof).
+	* GeneProcess::geneFrame: added OpenMP 'parallel for' directive to outermost loop (reduced percent-time spent in this file from 3.53% to 0.00%).
+	* svdcmp_d.c: added OpenMP 'parallel for' directives to the original svd implementation. After this change, gprof profiler data shows a reduction in percent-time of the program spend in svdcmp_d from and average of 54.88% to 26.18%. My concern for this change is that while this implementation passes the testdata without error, the current OMP directive leaves all variables as shared ad I do not know enough about svd implementations to know if this is safe.
+	
+
+Changes attempted, not not kept:
+	* Following the resutls of phase 1 (see https://henricasanova.github.io/ics432_spring2017/modules/project1/), commented out the logic of suchi_utils::remove3D(). However, this resulted in a significant byte-per-byte difference in the processed output file as compared to the valid test file.
+	* Attempted to use cpp linear algrbra library, Eigen, for a faster svd implementation. Using this library's implementation of svd would have requiered using a different method signature which would mean I would have had to write an adapter to convert the inputs of the original svd function to (a reduced number of) inputs that the new svd could accept. However, since the code does not reveal what the svd is being used for or clearly how the input matricies are being created, I decided not to continue down this path.
+	* Attempted a faster svdcomp implementation from http://www.public.iastate.edu/~dicook/JSS/paper/code/svd.c. This version of svd uses same method signature as the original svdcomp, but fails on testing with error message:
+		Problem with TIR-160922112412-bb70-scan.bsqmn
+	tracking the stacktrace to the first identifiable non-library sourcefile of the program shows:
+		==9542== 
+		==9542== Process terminating with default action of signal 11 (SIGSEGV)
+		==9542==  General Protection Fault
+		==9542==    at 0x6930460: _int_malloc (malloc.c:3533)
+		==9542==    by 0x69325D3: malloc (malloc.c:2911)
+		==9542==    by 0x647F778: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+		==9542==    by 0x6486489: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+		==9542==    by 0x6482CA5: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+		==9542==    by 0x4178A9: svdfit_d (in /home/reedv/Documents/ics432/tircis_mod/Tircis/testdata/tircis_process_cmd)
+	Looking again at the url that this new svd was taken from, shows that it is likely not a 'pure/straght' svd implementation.
+ 
+

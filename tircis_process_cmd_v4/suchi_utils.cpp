@@ -326,9 +326,10 @@ void apodize (float *apod, int nsamps) {
 
 }
 
+
 // inplace 3d removal of trend
 void remove3D (double *inarr, int npts){
-
+// see https://henricasanova.github.io/ics432_spring2017/modules/project1/
     int i ;
     double *xind = new double [npts] ;
     double *tmp0 = new double [npts] ;
@@ -341,8 +342,9 @@ void remove3D (double *inarr, int npts){
     }
     delete [] tmp0 ;
     delete [] xind ;
-
+//*/
 }
+
 
 // call of fftw, output is 'out' and is complex npts array
 void fftcall (double *indat, double *out, int npts, int dir){
